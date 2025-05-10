@@ -1,5 +1,5 @@
 import Order from "../models/Order.js";
-import Product from "../models/product.js";
+import Product from "../models/Product.js";
 import stripe from "stripe";
 import User from "../models/user.js";
 
