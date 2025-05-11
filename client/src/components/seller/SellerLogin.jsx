@@ -8,8 +8,8 @@ const SellerLogin = () => {
   const [password, setPassword] = useState("");
 
   const onSubmitHandler = async (event) => {
+    event.preventDefault();
     try {
-      event.preventDefault();
       const { data } = await axios.post("/api/seller/login", {
         email,
         password,
@@ -21,7 +21,14 @@ const SellerLogin = () => {
         toast.error(data?.message);
       }
     } catch (error) {
-      toast.error(error?.message);
+      console.log("error", error);
+
+      // Axios wraps backend error responses in `error.response`
+      if (error.response && error.response.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
     }
   };
 
