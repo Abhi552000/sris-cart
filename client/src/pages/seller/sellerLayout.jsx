@@ -2,6 +2,7 @@ import { Link, NavLink, Outlet } from "react-router-dom";
 import { assets } from "../../assets/assets";
 import { useAppContext } from "../../context/AppContext";
 import toast from "react-hot-toast";
+import { ShoppingCart } from "lucide-react";
 
 const SellerLayout = () => {
   const { axios, navigate } = useAppContext();
@@ -33,13 +34,27 @@ const SellerLayout = () => {
   return (
     <>
       <div className="flex items-center justify-between px-4 md:px-8 border-b border-gray-300 py-3 bg-white">
-        <Link to="/">
-          <img
-            className="cursor-pointer w-34 md:w-38"
-            src={assets.logo}
-            alt="logo"
-          />
-        </Link>
+        <div
+          className="flex items-center gap-2 cursor-pointer group"
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          {/* LOGO */}
+          <div
+            className="relative w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-br 
+    from-yellow-400 via-yellow-500 to-amber-500 shadow-lg group-hover:shadow-yellow-300/50
+    group-hover:scale-105 transition-all duration-300"
+          >
+            <ShoppingCart className="w-6 h-6 text-white" />
+            <div className="absolute -bottom-1 -middle-1 w-3 h-3 bg-white rounded-full shadow-md animate-ping" />
+          </div>
+
+          {/* BRAND NAME */}
+          <span className="text-2xl font-extrabold bg-gradient-to-r from-yellow-400 via-yellow-500 to-amber-500 bg-clip-text text-transparent tracking-wide">
+            SrisCart
+          </span>
+        </div>
         <div className="flex items-center gap-5 text-gray-500">
           <p>Hi! Admin</p>
           <button
