@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 import toast from "react-hot-toast";
+import { ArrowLeftIcon } from "lucide-react";
 
 const Cart = () => {
   const {
@@ -189,11 +190,7 @@ const Cart = () => {
           }}
           className="group cursor-pointer flex items-center mt-8 gap-2 text-primary font-medium"
         >
-          <img
-            src={assets.arrow_right_icon_colored}
-            alt="arrow"
-            className="group-hover:-translate-x-1 transition"
-          />
+          <ArrowLeftIcon className=" w-4 h-4" />
           Continue Shopping
         </button>
       </div>
@@ -263,7 +260,7 @@ const Cart = () => {
           </p>
           <p className="flex justify-between">
             <span>Shipping Fee</span>
-            <span className="text-green-600">Free</span>
+            <span className="text-primary-600">Free</span>
           </p>
           <p className="flex justify-between">
             <span>Tax (2%)</span>
@@ -284,7 +281,7 @@ const Cart = () => {
 
         <button
           onClick={placeOrder}
-          className="w-full py-3 mt-6 cursor-pointer bg-primary text-white font-medium hover:bg-primary-dull transition"
+          className="w-full py-3 mt-6 cursor-pointer bg-gradient-to-r  from-yellow-400 to-amber-500 text-white font-medium "
         >
           {paymentOption === "COD" ? "Place Order" : "Proceed to Checkout"}
         </button>

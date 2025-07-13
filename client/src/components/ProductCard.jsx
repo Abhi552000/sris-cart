@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { assets } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
+import { ShoppingCart } from "lucide-react";
 
 const ProductCard = ({ product }) => {
   const { currency, addToCart, removeFromCart, cartItems, navigate } =
     useAppContext();
-
 
   return (
     product && (
@@ -62,8 +62,7 @@ const ProductCard = ({ product }) => {
                   className="flex items-center justify-center gap-1 bg-primary/10 border border-primary/40 md:w-[80px] w-[64px] h-[34px] rounded cursor-pointer text-primary font-medium"
                   onClick={() => addToCart(product._id)}
                 >
-                  <img src={assets.cart_icon} alt="cart_icon" />
-                  Add
+                  <ShoppingCart className="w-4 h-4"/> Add
                 </button>
               ) : (
                 <div className="flex items-center justify-center gap-2 md:w-20 w-16 h-[34px] bg-primary/25 rounded select-none">

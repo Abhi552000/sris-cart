@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
+import { ShoppingCart } from "lucide-react";
 
 const Navbar = () => {
   const [open, setOpen] = React.useState(false);
@@ -41,9 +42,27 @@ const Navbar = () => {
 
   return (
     <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative transition-all">
-      <NavLink to="/" onClick={() => setOpen(false)}>
-        <img className="h-9" src={assets.logo} alt="logo" />
-      </NavLink>
+      <div
+        className="flex items-center gap-2 cursor-pointer group"
+        onClick={() => {
+          navigate("/");
+        }}
+      >
+        {/* LOGO */}
+        <div
+          className="relative w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-br 
+    from-yellow-400 via-yellow-500 to-amber-500 shadow-lg group-hover:shadow-yellow-300/50
+    group-hover:scale-105 transition-all duration-300"
+        >
+          <ShoppingCart className="w-6 h-6 text-white" />
+          <div className="absolute -bottom-1 -middle-1 w-3 h-3 bg-white rounded-full shadow-md animate-ping" />
+        </div>
+
+        {/* BRAND NAME */}
+        <span className="text-2xl font-extrabold bg-gradient-to-r from-yellow-400 via-yellow-500 to-amber-500 bg-clip-text text-transparent tracking-wide">
+          SrisCart
+        </span>
+      </div>
 
       {/* Desktop Menu */}
       <div className="hidden sm:flex items-center gap-8">
@@ -80,7 +99,7 @@ const Navbar = () => {
         {!user ? (
           <button
             onClick={() => setShowUserLogin(true)}
-            className="cursor-pointer px-8 py-2 bg-primary hover:bg-primary-dull transition text-white rounded-full"
+            className="cursor-pointer px-8 py-2 bg-gradient-to-r  from-yellow-400 to-amber-500 text-white transition rounded-full"
           >
             Login
           </button>
