@@ -3,7 +3,8 @@ import { useAppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
 
 const Login = () => {
-  const { setShowUserLogin, setUser, axios, navigate } = useAppContext();
+  const { setShowUserLogin, fetchUser, axios, navigate } = useAppContext();
+
   const [state, setState] = useState("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -12,19 +13,28 @@ const Login = () => {
   const onSubmitHandler = async (event) => {
     try {
       event.preventDefault();
+
       const { data } = await axios.post(`api/user/${state}`, {
         name,
         email,
         password,
       });
+
       if (data.success) {
+        // 🔥 Fetch full user data including _id
+        await fetchUser();
+
+        toast.success(
+          state === "login"
+            ? "Login successful"
+            : "Account created successfully"
+        );
+
         navigate("/");
-        setUser(data.user);
         setShowUserLogin(false);
       } else {
         toast.error(data.message);
       }
-      setShowUserLogin(false);
     } catch (error) {
       toast.error(error.message);
     }
@@ -33,7 +43,7 @@ const Login = () => {
   return (
     <div
       onClick={() => setShowUserLogin(false)}
-      className="fixed top-0 bottom-0 left-0 right-0 z-30 flex items-center text-sm to-gray-600 bg-black/50"
+      className="fixed top-0 bottom-0 left-0 right-0 z-30 flex items-center text-sm text-gray-600 bg-black/50"
     >
       <form
         onSubmit={onSubmitHandler}
@@ -44,6 +54,7 @@ const Login = () => {
           <span className="text-primary">User</span>{" "}
           {state === "login" ? "Login" : "Sign Up"}
         </p>
+
         {state === "register" && (
           <div className="w-full">
             <p>Name</p>
@@ -57,7 +68,8 @@ const Login = () => {
             />
           </div>
         )}
-        <div className="w-full ">
+
+        <div className="w-full">
           <p>Email</p>
           <input
             onChange={(e) => setEmail(e.target.value)}
@@ -68,7 +80,8 @@ const Login = () => {
             required
           />
         </div>
-        <div className="w-full ">
+
+        <div className="w-full">
           <p>Password</p>
           <input
             onChange={(e) => setPassword(e.target.value)}
@@ -79,6 +92,7 @@ const Login = () => {
             required
           />
         </div>
+
         {state === "register" ? (
           <p>
             Already have account?{" "}
@@ -100,6 +114,7 @@ const Login = () => {
             </span>
           </p>
         )}
+
         <button className="w-full bg-gradient-to-r cursor-pointer from-yellow-400 to-amber-500 text-white text-sm font-semibold py-2.5 rounded-lg hover:shadow-md transition-all duration-200 flex items-center justify-center gap-2">
           {state === "register" ? "Create Account" : "Login"}
         </button>
