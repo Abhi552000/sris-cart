@@ -41,7 +41,20 @@ export const AppContextProvider = ({ children }) => {
 
       if (data.success) {
         setUser(data.user);
-        setCartItems(data.user.cartItems || {});
+
+        const mergedCart = { ...data.user.cartItems };
+
+        for (const item in cartItems) {
+          if (mergedCart[item]) {
+            mergedCart[item] += cartItems[item];
+          } else {
+            mergedCart[item] = cartItems[item];
+          }
+        }
+
+        setCartItems(mergedCart);
+
+        await axios.post("/api/cart/update", { cartItems: mergedCart });
       }
     } catch {
       setUser(null);

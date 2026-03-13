@@ -21,7 +21,6 @@ const Login = () => {
       });
 
       if (data.success) {
-        // 🔥 Fetch full user data including _id
         await fetchUser();
 
         toast.success(
