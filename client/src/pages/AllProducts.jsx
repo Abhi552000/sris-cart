@@ -19,7 +19,7 @@ const AllProducts = () => {
   }, [products, searchQuery]);
   return (
     <div className="mt-16 px-4 w-full flex flex-col">
-      {/* Header */}
+      {/* Header components */}
       <div className="flex flex-col items-start">
         <p className="text-2xl font-medium uppercase">All Products</p>
         <div className="w-16 h-0.5 bg-primary rounded-full mt-1"></div>
