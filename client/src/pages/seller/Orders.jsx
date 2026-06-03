@@ -6,9 +6,11 @@ import toast from "react-hot-toast";
 const Orders = () => {
   const { currency, axios } = useAppContext();
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchOrders = async () => {
     try {
+      setLoading(true);
       const { data } = await axios.get("/api/order/seller");
       if (data.success) {
         setOrders(data.orders);
@@ -17,12 +19,22 @@ const Orders = () => {
       }
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-[50vh] flex-1">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="no-scrollbar flex-1 h-[95vh] overflow-y-scroll">

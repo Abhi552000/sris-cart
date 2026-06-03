@@ -4,16 +4,20 @@ import { dummyOrders } from "../assets/assets";
 
 const MyOrders = () => {
   const [myOrders, setMyOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { currency, axios, user } = useAppContext();
 
   const fetchMyOrders = async () => {
     try {
+      setLoading(true);
       const { data } = await axios.get("/api/order/user");
       if (data.success) {
         setMyOrders(data.orders);
       }
     } catch (error) {
       console.log("error", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -22,6 +26,14 @@ const MyOrders = () => {
       fetchMyOrders();
     }
   }, [user]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-[50vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-16 pb-16">

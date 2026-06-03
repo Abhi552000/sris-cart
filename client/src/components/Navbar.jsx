@@ -9,30 +9,13 @@ const Navbar = () => {
   const [open, setOpen] = React.useState(false);
   const {
     user,
-    setUser,
     setShowUserLogin,
     navigate,
     searchQuery,
     setSearchQuery,
     getCartCount,
-    getCartAmount,
-    axios,
+    logout,
   } = useAppContext();
-
-  const logout = async () => {
-    try {
-      const { data } = await axios.get("/api/user/logout");
-      if (data.success) {
-        toast.success(data.message);
-        setUser(null);
-        navigate("/");
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
 
   useEffect(() => {
     if (searchQuery.length > 0) {
@@ -68,7 +51,7 @@ const Navbar = () => {
       <div className="hidden sm:flex items-center gap-8">
         <NavLink to="/">Home</NavLink>
         <NavLink to="/products">All Products</NavLink>
-        <NavLink to="#">Contact</NavLink>
+        <NavLink to="/contact">Contact</NavLink>
 
         <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
           <input
