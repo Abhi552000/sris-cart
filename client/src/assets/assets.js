@@ -149,30 +149,30 @@ export const footerLinks = [
   {
     title: "Quick Links",
     links: [
-      { text: "Home", url: "#" },
-      { text: "Best Sellers", url: "#" },
-      { text: "Offers & Deals", url: "#" },
-      { text: "Contact Us", url: "#" },
-      { text: "FAQs", url: "#" },
+      { text: "Home", url: "/" },
+      { text: "Best Sellers", url: "/products" },
+      { text: "Offers & Deals", url: "/offers" },
+      { text: "Contact Us", url: "/contact" },
+      { text: "FAQs", url: "/faq" },
     ],
   },
   {
     title: "Need help?",
     links: [
-      { text: "Delivery Information", url: "#" },
-      { text: "Return & Refund Policy", url: "#" },
-      { text: "Payment Methods", url: "#" },
-      { text: "Track your Order", url: "#" },
-      { text: "Contact Us", url: "#" },
+      { text: "Delivery Information", url: "/delivery-info" },
+      { text: "Return & Refund Policy", url: "/return-refund" },
+      { text: "Payment Methods", url: "/faq" },
+      { text: "Track your Order", url: "/my-orders" },
+      { text: "Contact Us", url: "/contact" },
     ],
   },
   {
     title: "Follow Us",
     links: [
-      { text: "Instagram", url: "#" },
-      { text: "Twitter", url: "#" },
-      { text: "Facebook", url: "#" },
-      { text: "YouTube", url: "#" },
+      { text: "Instagram", url: "https://www.instagram.com" },
+      { text: "Twitter", url: "https://www.twitter.com" },
+      { text: "Facebook", url: "https://www.facebook.com" },
+      { text: "YouTube", url: "https://www.youtube.com" },
     ],
   },
 ];
@@ -234,6 +234,7 @@ export const dummyProducts = [
     createdAt: "2025-03-25T07:17:46.018Z",
     updatedAt: "2025-03-25T07:18:13.103Z",
     inStock: true,
+    bestseller: true,
   },
   {
     _id: "gd48g45h",
@@ -302,6 +303,7 @@ export const dummyProducts = [
     createdAt: "2025-03-25T07:17:46.018Z",
     updatedAt: "2025-03-25T07:18:13.103Z",
     inStock: true,
+    bestseller: true,
   },
   {
     _id: "ek52j23k",
@@ -386,6 +388,7 @@ export const dummyProducts = [
     createdAt: "2025-03-25T07:17:46.018Z",
     updatedAt: "2025-03-25T07:18:13.103Z",
     inStock: true,
+    bestseller: true,
   },
   {
     _id: "ek57j78k",

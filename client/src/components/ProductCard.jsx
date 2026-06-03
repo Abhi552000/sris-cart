@@ -16,8 +16,13 @@ const ProductCard = ({ product }) => {
           );
           scrollTo(0, 0);
         }}
-        className="border border-gray-500/20 rounded-md md:px-4 px-3 py-2 bg-white min-w-56 max-w-56 w-full"
+        className="relative border border-gray-500/20 rounded-md md:px-4 px-3 py-2 bg-white min-w-56 max-w-56 w-full"
       >
+        {product?.bestseller && (
+          <span className="absolute top-2 left-2 z-10 bg-gradient-to-r from-yellow-400 to-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm tracking-wide uppercase">
+            Bestseller
+          </span>
+        )}
         <div className="group cursor-pointer flex items-center justify-center px-2">
           <img
             className="group-hover:scale-105 transition max-w-26 md:max-w-36"

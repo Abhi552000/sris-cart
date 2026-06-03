@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContext";
-import { dummyOrders } from "../assets/assets";
+import { assets, dummyOrders } from "../assets/assets";
 
 const MyOrders = () => {
   const [myOrders, setMyOrders] = useState([]);
@@ -64,26 +64,26 @@ const MyOrders = () => {
               <div className="flex items-center mb-4 md:mb-0">
                 <div className="bg-primary/10 p-4 rounded-lg">
                   <img
-                    src={item.product.image[0]}
+                    src={item.product?.image?.[0] || assets.box_icon}
                     alt=""
-                    className="w-16 h-16"
+                    className="w-16 h-16 object-contain"
                   />
                 </div>
                 <div className="ml-4">
                   <h2 className="text-xl font-medium text-gray-800">
-                    {item.product.name}
+                    {item.product?.name || "Deleted Product"}
                   </h2>
-                  <p>Category: {item.product.category}</p>
+                  <p>Category: {item.product?.category || "N/A"}</p>
                 </div>
               </div>
               <div className="flex flex-col justify-center md:ml-8 mb-4 md:mb-0">
-                <p>Qunatity:{item.quantity || "1"}</p>
-                <p>State:{order.status}</p>
-                <p>Date:{new Date(order.createdAt).toLocaleDateString()}</p>
+                <p>Quantity: {item.quantity || "1"}</p>
+                <p>State: {order.status}</p>
+                <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
               </div>
               <p className="text-primary text-lg font-medium">
                 Amount: {currency}
-                {item.product.offerPrice * item.quantity}
+                {item.product ? (item.product.offerPrice * item.quantity) : 0}
               </p>
             </div>
           ))}

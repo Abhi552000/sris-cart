@@ -55,7 +55,7 @@ const Orders = () => {
                 {order.items.map((item, index) => (
                   <div key={index} className="flex flex-col">
                     <p className="font-medium">
-                      {item.product.name}{" "}
+                      {item.product?.name || "Deleted Product"}{" "}
                       <span className={"text-primary"}>x {item.quantity}</span>
                     </p>
                   </div>
@@ -64,17 +64,22 @@ const Orders = () => {
             </div>
 
             <div className="text-sm md:text-base text-black/70">
-              <p className="text-black/70">
-                {order.address.firstName} {order.address.lastName}
-              </p>
-              <p>
-                {order.address.street}, {order.address.city},
-              </p>
-              <p>
-                {order.address.state}, {order.address.zipcode},
-                {order.address.country}
-              </p>
-              <p>{order.address.phone}</p>
+              {order.address ? (
+                <>
+                  <p className="text-black/70 font-semibold">
+                    {order.address.firstName} {order.address.lastName}
+                  </p>
+                  <p>
+                    {order.address.street}, {order.address.city},
+                  </p>
+                  <p>
+                    {order.address.state}, {order.address.zipcode}, {order.address.country}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">{order.address.phone}</p>
+                </>
+              ) : (
+                <p className="text-red-500 italic text-xs">No address specified</p>
+              )}
             </div>
 
             <p className="font-medium text-lg my-auto">
