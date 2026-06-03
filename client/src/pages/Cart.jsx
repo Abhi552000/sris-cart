@@ -23,6 +23,7 @@ const Cart = () => {
   const [addresses, setAdresses] = useState([]);
   const [selectedAdress, setSelectedAddress] = useState(null);
   const [paymentOption, setPaymentOption] = useState("COD");
+  const [loading, setLoading] = useState(false);
 
   const getCart = () => {
     let tempArray = [];
@@ -53,7 +54,7 @@ const Cart = () => {
       if (!selectedAdress) {
         return toast.error("Please select an address");
       }
-
+      setLoading(true);
       if (paymentOption === "COD") {
         const { data } = await axios.post("api/order/cod", {
           userId: user._id,
@@ -87,6 +88,8 @@ const Cart = () => {
       }
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -280,10 +283,18 @@ const Cart = () => {
         </div>
 
         <button
+          disabled={loading}
           onClick={placeOrder}
-          className="w-full py-3 mt-6 cursor-pointer bg-gradient-to-r  from-yellow-400 to-amber-500 text-white font-medium "
+          className={`w-full py-3 mt-6 cursor-pointer bg-gradient-to-r from-yellow-400 to-amber-500 text-white font-medium flex items-center justify-center gap-2 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
         >
-          {paymentOption === "COD" ? "Place Order" : "Proceed to Checkout"}
+          {loading ? (
+            <>
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <span>Processing...</span>
+            </>
+          ) : (
+            paymentOption === "COD" ? "Place Order" : "Proceed to Checkout"
+          )}
         </button>
       </div>
     </div>

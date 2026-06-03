@@ -28,6 +28,7 @@ const AddAddress = () => {
     country: "",
     phone: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,6 +42,7 @@ const AddAddress = () => {
     e.preventDefault();
 
     try {
+      setLoading(true);
       const { data } = await axios.post("api/address/add", { address });
       if (data.success) {
         toast.success(data.message);
@@ -50,6 +52,8 @@ const AddAddress = () => {
       }
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -138,8 +142,18 @@ const AddAddress = () => {
               placeholder="Phone"
             />
 
-            <button className="w-full mt-6 bg-primary text-white py-3 hover:bg-primary-dull transition cursor-pointer uppercase">
-              Save Address
+            <button 
+              disabled={loading}
+              className={`w-full mt-6 bg-primary text-white py-3 hover:bg-primary-dull transition cursor-pointer uppercase flex items-center justify-center gap-2 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+            >
+              {loading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Saving...</span>
+                </>
+              ) : (
+                "Save Address"
+              )}
             </button>
           </form>
         </div>

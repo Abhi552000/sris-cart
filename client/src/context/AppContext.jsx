@@ -17,7 +17,8 @@ export const AppContextProvider = ({ children }) => {
   const [showUserLogin, setShowUserLogin] = useState(false);
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState({});
-  const [searchQuery, setSearchQuery] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isAppLoading, setIsAppLoading] = useState(true);
 
   // 🔹 Fetch Seller
   const fetchSeller = async () => {
@@ -156,11 +157,39 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
+  // 🔹 Logout User
+  const logout = async () => {
+    try {
+      const { data } = await axios.get("/api/user/logout");
+      if (data.success) {
+        toast.success(data.message);
+        setUser(null);
+        setCartItems({});
+        navigate("/");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   // 🔹 Initial Load
   useEffect(() => {
-    fetchUser();
-    fetchSeller();
-    fetchProducts();
+    const initData = async () => {
+      try {
+        await Promise.allSettled([
+          fetchUser(),
+          fetchSeller(),
+          fetchProducts(),
+        ]);
+      } catch (error) {
+        console.error("Error loading app data:", error);
+      } finally {
+        setIsAppLoading(false);
+      }
+    };
+    initData();
   }, []);
 
   // 🔹 Sync Cart with DB
@@ -193,6 +222,8 @@ export const AppContextProvider = ({ children }) => {
     getCartCount,
     getCartAmount,
     axios,
+    isAppLoading,
+    logout,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

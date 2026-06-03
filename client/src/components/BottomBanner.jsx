@@ -12,7 +12,7 @@ const BottomBanner = () => {
       <img
         src={assets.bottom_banner_image_sm}
         alt="banner"
-        className="w-full hidden"
+        className="w-full md:hidden"
       />
       <div className="absolute inset-0 flex flex-col items-center md:items-end md:justify-center pt-16 md:pt-0 md:pr-24">
         <div>

@@ -10,12 +10,14 @@ const AddProduct = () => {
   const [category, setcategory] = useState("");
   const [price, setPrice] = useState("");
   const [offerPrice, setOfferPrice] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { axios } = useAppContext();
 
   const onSubmitHandler = async (event) => {
     try {
       event.preventDefault();
+      setLoading(true);
       const productdata = {
         name,
         description: description.split("\n"),
@@ -43,6 +45,8 @@ const AddProduct = () => {
       }
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -163,8 +167,18 @@ const AddProduct = () => {
             />
           </div>
         </div>
-        <button className="px-8 py-2.5 bg-primary text-white font-medium rounded cursor-pointer">
-          ADD
+        <button 
+          disabled={loading}
+          className={`px-8 py-2.5 bg-primary text-white font-medium rounded cursor-pointer flex items-center justify-center gap-2 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+        >
+          {loading ? (
+            <>
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <span>Adding...</span>
+            </>
+          ) : (
+            "ADD"
+          )}
         </button>
       </form>
     </div>

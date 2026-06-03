@@ -4,9 +4,11 @@ import toast from "react-hot-toast";
 
 const ProductList = () => {
   const { products, currency, fetchProducts, axios } = useAppContext();
+  const [togglingId, setTogglingId] = React.useState(null);
 
   const toggleStock = async (id, inStock) => {
     try {
+      setTogglingId(id);
       const { data } = await axios.post("/api/product/stock", { id, inStock });
       if (data.success) {
         fetchProducts();
@@ -16,6 +18,8 @@ const ProductList = () => {
       }
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setTogglingId(null);
     }
   };
 
@@ -57,9 +61,10 @@ const ProductList = () => {
                     {product.offerPrice}
                   </td>
                   <td className="px-4 py-3">
-                    <label className="relative inline-flex items-center cursor-pointer text-gray-900 gap-3">
+                    <label className={`relative inline-flex items-center cursor-pointer text-gray-900 gap-3 ${togglingId === product._id ? 'opacity-50 cursor-not-allowed' : ''}`}>
                       <input
-                        onClick={() =>
+                        disabled={togglingId === product._id}
+                        onChange={() =>
                           toggleStock(product._id, !product.inStock)
                         }
                         checked={product.inStock}

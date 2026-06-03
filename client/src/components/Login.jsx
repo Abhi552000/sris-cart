@@ -9,10 +9,12 @@ const Login = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const onSubmitHandler = async (event) => {
     try {
       event.preventDefault();
+      setLoading(true);
 
       const { data } = await axios.post(`api/user/${state}`, {
         name,
@@ -36,6 +38,8 @@ const Login = () => {
       }
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -114,8 +118,15 @@ const Login = () => {
           </p>
         )}
 
-        <button className="w-full bg-gradient-to-r cursor-pointer from-yellow-400 to-amber-500 text-white text-sm font-semibold py-2.5 rounded-lg hover:shadow-md transition-all duration-200 flex items-center justify-center gap-2">
-          {state === "register" ? "Create Account" : "Login"}
+        <button 
+          disabled={loading}
+          className={`w-full bg-gradient-to-r cursor-pointer from-yellow-400 to-amber-500 text-white text-sm font-semibold py-2.5 rounded-lg hover:shadow-md transition-all duration-200 flex items-center justify-center gap-2 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+        >
+          {loading ? (
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            state === "register" ? "Create Account" : "Login"
+          )}
         </button>
       </form>
     </div>
