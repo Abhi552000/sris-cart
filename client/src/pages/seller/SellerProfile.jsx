@@ -118,7 +118,7 @@ const SellerProfile = () => {
               value={storeName}
               onChange={(e) => setStoreName(e.target.value)}
               placeholder="e.g. SrisCart Fresh Store"
-              className="outline-none py-2 px-3 rounded border border-gray-300 focus:border-primary text-sm text-gray-700 disabled:bg-gray-50"
+              className="w-full outline-none py-2 px-3 rounded border border-gray-300 focus:border-primary text-sm text-gray-700 disabled:bg-gray-50"
             />
           </div>
 
@@ -136,7 +136,7 @@ const SellerProfile = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. John Doe"
-              className="outline-none py-2 px-3 rounded border border-gray-300 focus:border-primary text-sm text-gray-700 disabled:bg-gray-50"
+              className="w-full outline-none py-2 px-3 rounded border border-gray-300 focus:border-primary text-sm text-gray-700 disabled:bg-gray-50"
             />
           </div>
 
@@ -154,7 +154,7 @@ const SellerProfile = () => {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+91 98765 43210"
-                className="outline-none py-2 px-3 rounded border border-gray-300 focus:border-primary text-sm text-gray-700 disabled:bg-gray-50"
+                className="w-full outline-none py-2 px-3 rounded border border-gray-300 focus:border-primary text-sm text-gray-700 disabled:bg-gray-50"
               />
             </div>
 
@@ -172,7 +172,7 @@ const SellerProfile = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@example.com"
-                className="outline-none py-2 px-3 rounded border border-gray-300 focus:border-primary text-sm text-gray-700 disabled:bg-gray-50"
+                className="w-full outline-none py-2 px-3 rounded border border-gray-300 focus:border-primary text-sm text-gray-700 disabled:bg-gray-50"
               />
             </div>
           </div>
@@ -190,7 +190,7 @@ const SellerProfile = () => {
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               placeholder="Store layout address detail"
-              className="outline-none py-2 px-3 rounded border border-gray-300 focus:border-primary text-sm text-gray-700 resize-none disabled:bg-gray-50"
+              className="w-full outline-none py-2 px-3 rounded border border-gray-300 focus:border-primary text-sm text-gray-700 resize-none disabled:bg-gray-50"
             ></textarea>
           </div>
 
@@ -212,7 +212,7 @@ const SellerProfile = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="outline-none py-2 px-3 rounded border border-gray-300 focus:border-primary text-sm text-gray-700 disabled:bg-gray-50"
+                className="w-full outline-none py-2 px-3 rounded border border-gray-300 focus:border-primary text-sm text-gray-700 disabled:bg-gray-50"
               />
             </div>
 
@@ -230,7 +230,7 @@ const SellerProfile = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••"
-                className="outline-none py-2 px-3 rounded border border-gray-300 focus:border-primary text-sm text-gray-700 disabled:bg-gray-50"
+                className="w-full outline-none py-2 px-3 rounded border border-gray-300 focus:border-primary text-sm text-gray-700 disabled:bg-gray-50"
               />
             </div>
           </div>

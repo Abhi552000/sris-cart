@@ -90,15 +90,15 @@ const SellerLayout = () => {
               to={item.path}
               key={item.name}
               end={item.path === "/seller"}
-              className={({ isActive }) => `flex items-center py-3 px-4 gap-3 
+              className={({ isActive }) => `flex items-center justify-center md:justify-start py-3 px-2 md:px-4 gap-3 transition-all
                             ${
                               isActive
                                 ? "border-r-4 md:border-r-[6px] bg-primary/10 border-primary text-primary"
                                 : "hover:bg-gray-100/90 border-white"
                             }`}
             >
-              <img src={item.icon} alt="" className="w-7 h-7" />
-              <p className="md:block hidden text-center">{item.name}</p>
+              <img src={item.icon} alt="" className="w-6 h-6 md:w-7 md:h-7 shrink-0" />
+              <p className="md:block hidden text-sm font-medium">{item.name}</p>
             </NavLink>
           ))}
         </div>

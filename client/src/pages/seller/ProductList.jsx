@@ -45,8 +45,8 @@ const ProductList = () => {
     <div className="flex-1 py-10 flex flex-col justify-between">
       <div className="w-full md:p-10 p-4">
         <h2 className="pb-4 text-lg font-medium">All Products</h2>
-        <div className="flex flex-col items-center max-w-4xl w-full overflow-hidden rounded-md bg-white border border-gray-500/20">
-          <table className="md:table-auto table-fixed w-full overflow-hidden">
+        <div className="w-full overflow-x-auto rounded-md bg-white border border-gray-500/20 max-w-4xl">
+          <table className="w-full min-w-[750px] border-collapse">
             <thead className="text-gray-900 text-sm text-left">
               <tr>
                 <th className="px-4 py-3 font-semibold truncate">Product</th>
