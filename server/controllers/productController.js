@@ -57,3 +57,15 @@ export const changeStock = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 };
+
+// Change Product bestseller status: /api/product/bestseller
+export const changeBestseller = async (req, res) => {
+  try {
+    const { id, bestseller } = req.body;
+    await Product.findByIdAndUpdate(id, { bestseller });
+    res.json({ success: true, message: "Bestseller Status Updated" });
+  } catch (error) {
+    console.log("error", error.message);
+    res.json({ success: false, message: error.message });
+  }
+};

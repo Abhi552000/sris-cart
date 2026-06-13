@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import Seller from "../models/seller.js";
 
 const authSeller = async (req, res, next) => {
   const { sellerToken } = req.cookies;
@@ -10,7 +11,12 @@ const authSeller = async (req, res, next) => {
   try {
     const tokenDecoded = jwt.verify(sellerToken, process.env.JWT_SECRET);
 
-    if (tokenDecoded?.email === process.env.SELLER_EMAIL) {
+    const seller = await Seller.findOne({ email: tokenDecoded?.email });
+
+    if (seller) {
+      req.seller = seller;
+      return next();
+    } else if (tokenDecoded?.email === process.env.SELLER_EMAIL) {
       return next();
     } else {
       return res

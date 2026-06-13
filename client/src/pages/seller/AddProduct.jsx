@@ -10,6 +10,7 @@ const AddProduct = () => {
   const [category, setcategory] = useState("");
   const [price, setPrice] = useState("");
   const [offerPrice, setOfferPrice] = useState("");
+  const [bestseller, setBestseller] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const { axios } = useAppContext();
@@ -24,6 +25,7 @@ const AddProduct = () => {
         category,
         price,
         offerPrice,
+        bestseller,
       };
       const formData = new FormData();
       formData.append("productData", JSON.stringify(productdata));
@@ -39,6 +41,7 @@ const AddProduct = () => {
         setcategory("");
         setPrice("");
         setOfferPrice("");
+        setBestseller(false);
         setFiles([]);
       } else {
         toast.error(data.message);
@@ -166,6 +169,18 @@ const AddProduct = () => {
               required
             />
           </div>
+        </div>
+        <div className="flex items-center gap-2.5 py-1">
+          <input
+            onChange={(e) => setBestseller(e.target.checked)}
+            checked={bestseller}
+            type="checkbox"
+            id="bestseller"
+            className="w-4 h-4 accent-primary cursor-pointer"
+          />
+          <label className="text-sm font-medium text-gray-700 select-none cursor-pointer" htmlFor="bestseller">
+            Add to Bestsellers
+          </label>
         </div>
         <button 
           disabled={loading}

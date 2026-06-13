@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { assets } from "../../assets/assets";
 import { useAppContext } from "../../context/AppContext";
@@ -6,6 +7,7 @@ import { ShoppingCart } from "lucide-react";
 
 const SellerLayout = () => {
   const { axios, navigate } = useAppContext();
+  const [sellerName, setSellerName] = useState("Admin");
 
   const sidebarLinks = [
     { name: "Add Product", path: "/seller", icon: assets.add_icon },
@@ -15,7 +17,23 @@ const SellerLayout = () => {
       icon: assets.product_list_icon,
     },
     { name: "Order", path: "/seller/orders", icon: assets.order_icon },
+    { name: "Profile", path: "/seller/profile", icon: assets.profile_icon },
   ];
+
+  const fetchSellerDetails = async () => {
+    try {
+      const { data } = await axios.get("/api/seller/profile");
+      if (data.success && data.seller?.name) {
+        setSellerName(data.seller.name);
+      }
+    } catch (error) {
+      console.error("Failed to fetch seller details:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSellerDetails();
+  }, []);
 
   const logout = async () => {
     try {
@@ -56,7 +74,7 @@ const SellerLayout = () => {
           </span>
         </div>
         <div className="flex items-center gap-5 text-gray-500">
-          <p>Hi! Admin</p>
+          <p>Hi! {sellerName}</p>
           <button
             onClick={logout}
             className="border rounded-full text-sm px-4 py-1"
@@ -72,15 +90,15 @@ const SellerLayout = () => {
               to={item.path}
               key={item.name}
               end={item.path === "/seller"}
-              className={({ isActive }) => `flex items-center py-3 px-4 gap-3 
+              className={({ isActive }) => `flex items-center justify-center md:justify-start py-3 px-2 md:px-4 gap-3 transition-all
                             ${
                               isActive
                                 ? "border-r-4 md:border-r-[6px] bg-primary/10 border-primary text-primary"
                                 : "hover:bg-gray-100/90 border-white"
                             }`}
             >
-              <img src={item.icon} alt="" className="w-7 h-7" />
-              <p className="md:block hidden text-center">{item.name}</p>
+              <img src={item.icon} alt="" className="w-6 h-6 md:w-7 md:h-7 shrink-0" />
+              <p className="md:block hidden text-sm font-medium">{item.name}</p>
             </NavLink>
           ))}
         </div>

@@ -6,24 +6,27 @@ import User from "../models/user.js";
 //Placed order COD : /api/order/cod
 export const placeOrderCOD = async (req, res) => {
   try {
-    const { userId, items, address } = req.body;
+    const { userId, items, address, discount = 0 } = req.body;
     if (!address || items.length === 0) {
       return res.json({ success: false, message: "Inalid data" });
     }
 
     // Calculate Amount Using Items
-    let amount = await items.reduce(async (acc, item) => {
+    let baseAmount = await items.reduce(async (acc, item) => {
       const product = await Product.findById(item.product);
       return (await acc) + product.offerPrice * item.quantity;
     }, 0);
 
-    //Add Tax charges(2%)
-    amount += Math.floor(amount * 0.2);
+    // Apply Discount
+    let discountedAmount = Math.max(0, baseAmount - discount);
+
+    // Add Tax charges(2%)
+    let finalAmount = discountedAmount + Math.round(discountedAmount * 0.02);
 
     await Order.create({
       userId,
       items,
-      amount,
+      amount: finalAmount,
       address,
       paymentType: "COD",
     });
@@ -38,7 +41,7 @@ export const placeOrderCOD = async (req, res) => {
 //Placed order STRIPE : /api/order/stripe
 export const placeOrderStripe = async (req, res) => {
   try {
-    const { userId, items, address } = req.body;
+    const { userId, items, address, discount = 0 } = req.body;
     const origin = req.headers.origin;
 
     console.log("origin", origin);
@@ -50,7 +53,7 @@ export const placeOrderStripe = async (req, res) => {
     let productData = [];
 
     // Calculate Amount Using Items
-    let amount = await items.reduce(async (acc, item) => {
+    let baseAmount = await items.reduce(async (acc, item) => {
       const product = await Product.findById(item.product);
       productData.push({
         name: product.name,
@@ -60,13 +63,16 @@ export const placeOrderStripe = async (req, res) => {
       return (await acc) + product.offerPrice * item.quantity;
     }, 0);
 
-    //Add Tax charges(2%)
-    amount += Math.floor(amount * 0.2);
+    // Apply Discount
+    let discountedAmount = Math.max(0, baseAmount - discount);
+
+    // Add Tax charges(2%)
+    let finalAmount = discountedAmount + Math.round(discountedAmount * 0.02);
 
     const order = await Order.create({
       userId,
       items,
-      amount,
+      amount: finalAmount,
       address,
       paymentType: "Online",
     });
@@ -74,15 +80,19 @@ export const placeOrderStripe = async (req, res) => {
     // Stripe Gateway Initialize
     const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
 
+    // Calculate proportional discount ratio for line items
+    const discountRatio = baseAmount > 0 ? discountedAmount / baseAmount : 1;
+
     // create line items for stripe
     const line_items = productData.map((item) => {
+      const adjustedPrice = item.price * discountRatio;
       return {
         price_data: {
           currency: "usd",
           product_data: {
             name: item.name,
           },
-          unit_amount: Math.floor(item.price + item.price * 0.02) * 100,
+          unit_amount: Math.round(adjustedPrice * 1.02 * 100),
         },
         quantity: item.quantity,
       };

@@ -124,3 +124,55 @@ export const logout = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 };
+
+// Update User Profile : /api/user/profile/update
+export const updateUserProfile = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    const { name, email, password } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ success: false, message: "User ID missing" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    if (email && email !== user.email) {
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.json({ success: false, message: "Email is already in use by another account" });
+      }
+      user.email = email;
+    }
+
+    if (name) user.name = name;
+    if (password) {
+      user.password = await bcrypt.hash(password, 10);
+    }
+
+    await user.save();
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.json({
+      success: true,
+      message: "Profile Updated Successfully",
+      user: { name: user.name, email: user.email },
+    });
+  } catch (error) {
+    console.log("error", error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
