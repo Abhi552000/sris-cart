@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
-import { useAppContext } from "../context/AppContext";
+import { useSelector, useDispatch } from "react-redux";
 import { User, Mail, Lock, Save } from "lucide-react";
 import toast from "react-hot-toast";
+import { updateUserProfile } from "../services/authService";
+import { fetchUserThunk } from "../store/authSlice";
 
 const UserProfile = () => {
-  const { user, fetchUser, axios } = useAppContext();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,12 +34,12 @@ const UserProfile = () => {
         payload.password = password;
       }
 
-      const { data } = await axios.post("/api/user/profile/update", payload);
+      const data = await updateUserProfile(payload);
       if (data.success) {
         toast.success(data.message || "Profile updated successfully!");
         setPassword("");
         setConfirmPassword("");
-        fetchUser(); // Sync App Context state
+        dispatch(fetchUserThunk()); // Sync Redux state
       } else {
         toast.error(data.message || "Failed to update profile.");
       }

@@ -1,11 +1,19 @@
 import { useState } from "react";
 import { assets } from "../assets/assets";
-import { useAppContext } from "../context/AppContext";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { CURRENCY } from "../services/constants";
+import { addToCart as addToCartAction, removeFromCart as removeFromCartAction } from "../store/cartSlice";
 import { ShoppingCart } from "lucide-react";
 
 const ProductCard = ({ product }) => {
-  const { currency, addToCart, removeFromCart, cartItems, navigate } =
-    useAppContext();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const currency = CURRENCY;
+  const cartItems = useSelector((state) => state.cart.cartItems);
+
+  const addToCart = (itemId) => dispatch(addToCartAction(itemId));
+  const removeFromCart = (itemId) => dispatch(removeFromCartAction(itemId));
 
   return (
     product && (

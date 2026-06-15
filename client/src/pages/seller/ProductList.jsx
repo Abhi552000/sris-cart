@@ -1,16 +1,22 @@
 import React from "react";
-import { useAppContext } from "../../context/AppContext";
+import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
+import { toggleStock as serviceToggleStock, toggleBestseller as serviceToggleBestseller } from "../../services/productService";
+import { fetchProductsThunk } from "../../store/productsSlice";
+import { CURRENCY } from "../../services/constants";
 
 const ProductList = () => {
-  const { products, currency, fetchProducts, axios } = useAppContext();
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.products.products);
+  const currency = CURRENCY;
+  const fetchProducts = () => dispatch(fetchProductsThunk());
   const [togglingId, setTogglingId] = React.useState(null);
   const [togglingBestsellerId, setTogglingBestsellerId] = React.useState(null);
 
   const toggleStock = async (id, inStock) => {
     try {
       setTogglingId(id);
-      const { data } = await axios.post("/api/product/stock", { id, inStock });
+      const data = await serviceToggleStock(id, inStock);
       if (data.success) {
         fetchProducts();
         toast.success(data.message);
@@ -27,7 +33,7 @@ const ProductList = () => {
   const toggleBestseller = async (id, bestseller) => {
     try {
       setTogglingBestsellerId(id);
-      const { data } = await axios.post("/api/product/bestseller", { id, bestseller });
+      const data = await serviceToggleBestseller(id, bestseller);
       if (data.success) {
         fetchProducts();
         toast.success(data.message);

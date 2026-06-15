@@ -1,21 +1,38 @@
 import React, { useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { assets } from "../assets/assets";
-import { useAppContext } from "../context/AppContext";
+import { setShowUserLogin as setShowUserLoginAction, logoutUserThunk } from "../store/authSlice";
+import { setSearchQuery as setSearchQueryAction, selectCartCount } from "../store/cartSlice";
 import toast from "react-hot-toast";
 import { ShoppingCart } from "lucide-react";
 
 const Navbar = () => {
   const [open, setOpen] = React.useState(false);
-  const {
-    user,
-    setShowUserLogin,
-    navigate,
-    searchQuery,
-    setSearchQuery,
-    getCartCount,
-    logout,
-  } = useAppContext();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const user = useSelector((state) => state.auth.user);
+  const searchQuery = useSelector((state) => state.cart.searchQuery);
+  const cartCount = useSelector(selectCartCount);
+
+  const getCartCount = () => cartCount;
+  const setSearchQuery = (val) => dispatch(setSearchQueryAction(val));
+  const setShowUserLogin = (val) => dispatch(setShowUserLoginAction(val));
+
+  const logout = async () => {
+    try {
+      const data = await dispatch(logoutUserThunk()).unwrap();
+      if (data.success) {
+        toast.success(data.message);
+        navigate("/");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message || error);
+    }
+  };
 
   useEffect(() => {
     if (searchQuery.length > 0) {

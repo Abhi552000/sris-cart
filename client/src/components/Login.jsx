@@ -1,9 +1,16 @@
 import { useState } from "react";
-import { useAppContext } from "../context/AppContext";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { loginUser, registerUser } from "../services/authService";
+import { setShowUserLogin as setShowUserLoginAction, fetchUserThunk } from "../store/authSlice";
 
 const Login = () => {
-  const { setShowUserLogin, fetchUser, axios, navigate } = useAppContext();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const setShowUserLogin = (val) => dispatch(setShowUserLoginAction(val));
+  const fetchUser = () => dispatch(fetchUserThunk());
 
   const [state, setState] = useState("login");
   const [name, setName] = useState("");
@@ -16,11 +23,12 @@ const Login = () => {
       event.preventDefault();
       setLoading(true);
 
-      const { data } = await axios.post(`api/user/${state}`, {
-        name,
-        email,
-        password,
-      });
+      let data;
+      if (state === "login") {
+        data = await loginUser(email, password);
+      } else {
+        data = await registerUser(name, email, password);
+      }
 
       if (data.success) {
         await fetchUser();

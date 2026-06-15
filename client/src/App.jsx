@@ -4,7 +4,10 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import { Toaster } from "react-hot-toast";
 import Footer from "./components/Footer";
-import { useAppContext } from "./context/AppContext";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { loadUserSession } from "./store/authSlice";
+import { fetchProductsThunk } from "./store/productsSlice";
 import Login from "./components/Login";
 import AllProducts from "./pages/AllProducts";
 import ProductCategory from "./pages/ProductCategory";
@@ -20,6 +23,7 @@ import Orders from "./pages/seller/Orders";
 import Loading from "./components/Loading";
 import Contact from "./pages/Contact";
 import ChatAssistant from "./components/ChatAssistant";
+import SpinWheel from "./components/SpinWheel";
 import FAQ from "./pages/FAQ";
 import Offers from "./pages/Offers";
 import DeliveryInfo from "./pages/DeliveryInfo";
@@ -30,7 +34,15 @@ import SellerProfile from "./pages/seller/SellerProfile";
 
 const App = () => {
   const isSellerPath = useLocation().pathname.includes("seller");
-  const { showUserLogin, isSeller, isAppLoading } = useAppContext();
+  const dispatch = useDispatch();
+  const showUserLogin = useSelector((state) => state.auth.showUserLogin);
+  const isSeller = useSelector((state) => state.auth.isSeller);
+  const isAppLoading = useSelector((state) => state.auth.isAppLoading);
+
+  useEffect(() => {
+    dispatch(loadUserSession());
+    dispatch(fetchProductsThunk());
+  }, [dispatch]);
 
   if (isAppLoading) {
     return <Loading />;
@@ -73,6 +85,7 @@ const App = () => {
       </div>
       {!isSellerPath && <Footer />}
       {!isSellerPath && <ChatAssistant />}
+      {!isSellerPath && <SpinWheel />}
     </div>
   );
 };

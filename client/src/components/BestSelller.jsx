@@ -1,9 +1,9 @@
 import React from "react";
 import ProductCard from "./ProductCard";
-import { useAppContext } from "../context/AppContext";
+import { useSelector } from "react-redux";
 
 const BestSelller = () => {
-  const { products } = useAppContext();
+  const products = useSelector((state) => state.products.products);
 
   const bestsellerProducts = products.filter((product) => product.inStock && product.bestseller);
   const displayProducts = bestsellerProducts.length > 0

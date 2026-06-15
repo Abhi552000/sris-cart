@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { assets } from "../assets/assets";
-import { useAppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
+import { addAddress } from "../services/addressService";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Inputfield = ({ type, placeholder, name, handleChange, address }) => (
   <input
@@ -15,7 +17,8 @@ const Inputfield = ({ type, placeholder, name, handleChange, address }) => (
 );
 
 const AddAddress = () => {
-  const { axios, user, navigate } = useAppContext();
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
 
   const [address, setAdresses] = useState({
     firstName: "",
@@ -43,7 +46,7 @@ const AddAddress = () => {
 
     try {
       setLoading(true);
-      const { data } = await axios.post("api/address/add", { address });
+      const data = await addAddress(address);
       if (data.success) {
         toast.success(data.message);
         navigate("/cart");

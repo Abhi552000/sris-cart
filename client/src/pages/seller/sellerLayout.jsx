@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets";
-import { useAppContext } from "../../context/AppContext";
 import toast from "react-hot-toast";
 import { ShoppingCart } from "lucide-react";
+import { getSellerProfile, logoutSeller } from "../../services/authService";
 
 const SellerLayout = () => {
-  const { axios, navigate } = useAppContext();
+  const navigate = useNavigate();
   const [sellerName, setSellerName] = useState("Admin");
 
   const sidebarLinks = [
@@ -22,7 +22,7 @@ const SellerLayout = () => {
 
   const fetchSellerDetails = async () => {
     try {
-      const { data } = await axios.get("/api/seller/profile");
+      const data = await getSellerProfile();
       if (data.success && data.seller?.name) {
         setSellerName(data.seller.name);
       }
@@ -37,7 +37,7 @@ const SellerLayout = () => {
 
   const logout = async () => {
     try {
-      const { data } = await axios.post("/api/seller/logout");
+      const data = await logoutSeller();
       if (data.success) {
         toast.success(data.message);
         navigate("/");
