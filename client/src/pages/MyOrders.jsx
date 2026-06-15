@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useAppContext } from "../context/AppContext";
+import { useSelector } from "react-redux";
 import { assets, dummyOrders } from "../assets/assets";
+import { getUserOrders } from "../services/orderService";
+import { CURRENCY } from "../services/constants";
 
 const MyOrders = () => {
   const [myOrders, setMyOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { currency, axios, user } = useAppContext();
+  const user = useSelector((state) => state.auth.user);
+  const currency = CURRENCY;
 
   const fetchMyOrders = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get("/api/order/user");
+      const data = await getUserOrders();
       if (data.success) {
         setMyOrders(data.orders);
       }

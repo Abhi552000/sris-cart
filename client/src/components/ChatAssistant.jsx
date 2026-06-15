@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { MessageSquare, X, Send, Sparkles, User, Loader2 } from "lucide-react";
-import { useAppContext } from "../context/AppContext";
+import { chatWithAI } from "../services/aiService";
 
 const ChatAssistant = () => {
-  const { axios } = useAppContext();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([
@@ -42,14 +41,13 @@ const ChatAssistant = () => {
     setLoading(true);
 
     try {
-      // API call to backend AI proxy
-      const { data } = await axios.post("/api/ai/chat", {
-        message: text,
-        chatHistory: messages.map((m) => ({
+      const data = await chatWithAI(
+        text,
+        messages.map((m) => ({
           sender: m.sender,
           text: m.text
         }))
-      });
+      );
 
       if (data.success) {
         setMessages((prev) => [

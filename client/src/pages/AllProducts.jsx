@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useAppContext } from "../context/AppContext";
+import { useSelector } from "react-redux";
 import ProductCard from "../components/ProductCard";
 
 const AllProducts = () => {
-  const { products, searchQuery } = useAppContext();
+  const products = useSelector((state) => state.products.products);
+  const searchQuery = useSelector((state) => state.cart.searchQuery);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {

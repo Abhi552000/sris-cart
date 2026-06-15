@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { useAppContext } from "../context/AppContext";
+import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { ChefHat, ShoppingBag, Clock, Check } from "lucide-react";
+import { addToCart as addToCartAction } from "../store/cartSlice";
 
 const RecipeBundles = () => {
-  const { products, addToCart } = useAppContext();
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.products.products);
+  const addToCart = (itemId) => dispatch(addToCartAction(itemId));
   const [addingRecipe, setAddingRecipe] = useState(null);
 
   // Recipes configuration with search terms to resolve from active products

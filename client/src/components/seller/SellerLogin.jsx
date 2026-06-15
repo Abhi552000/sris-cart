@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useAppContext } from "../../context/AppContext";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { loginSeller } from "../../services/authService";
+import { setIsSeller as setIsSellerAction } from "../../store/authSlice";
 
 const SellerLogin = () => {
-  const { isSeller, setIsSeller, navigate, axios } = useAppContext();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isSeller = useSelector((state) => state.auth.isSeller);
+  const setIsSeller = (val) => dispatch(setIsSellerAction(val));
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -12,10 +18,7 @@ const SellerLogin = () => {
     event.preventDefault();
     try {
       setLoading(true);
-      const { data } = await axios.post("/api/seller/login", {
-        email,
-        password,
-      });
+      const data = await loginSeller(email, password);
       if (data.success) {
         setIsSeller(true);
         navigate("/seller");

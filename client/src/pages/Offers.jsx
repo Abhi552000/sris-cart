@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useAppContext } from "../context/AppContext";
+import { useSelector } from "react-redux";
 import ProductCard from "../components/ProductCard";
 import { Tag, Copy, Check } from "lucide-react";
 import toast from "react-hot-toast";
 
 const Offers = () => {
-  const { products } = useAppContext();
+  const products = useSelector((state) => state.products.products);
   const [copiedCode, setCopiedCode] = useState(null);
 
   const coupons = [

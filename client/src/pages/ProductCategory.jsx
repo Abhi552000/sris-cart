@@ -1,11 +1,11 @@
 import React from "react";
-import { useAppContext } from "../context/AppContext";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { categories } from "../assets/assets";
 import ProductCard from "../components/ProductCard";
 
 const ProductCategory = () => {
-  const { products } = useAppContext();
+  const products = useSelector((state) => state.products.products);
   const { category } = useParams();
 
   const searchCategory = categories.find(

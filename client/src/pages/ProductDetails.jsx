@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
-import { useAppContext } from "../context/AppContext";
+import { CURRENCY } from "../services/constants";
+import { addToCart as addToCartAction } from "../store/cartSlice";
 import ProductCard from "../components/ProductCard";
 
 const ProductDetails = () => {
-  const { products, navigate, currency, addToCart } = useAppContext();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const currency = CURRENCY;
+  const products = useSelector((state) => state.products.products);
+  const addToCart = (itemId) => dispatch(addToCartAction(itemId));
   const { id } = useParams();
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [thumbnail, setThumbnail] = useState(null);

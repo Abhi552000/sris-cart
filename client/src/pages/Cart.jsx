@@ -1,23 +1,38 @@
 import { useEffect, useState } from "react";
-import { useAppContext } from "../context/AppContext";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import toast from "react-hot-toast";
 import { ArrowLeftIcon, Wallet, CreditCard, Ticket } from "lucide-react";
+import { getAddresses } from "../services/addressService";
+import { placeCODOrder, placeStripeOrder } from "../services/orderService";
+import { CURRENCY } from "../services/constants";
+import {
+  removeFromCart as removeFromCartAction,
+  updateCartItem as updateCartItemAction,
+  setCartItems as setCartItemsAction,
+  selectCartCount,
+  selectCartAmount,
+} from "../store/cartSlice";
 
 const Cart = () => {
-  const {
-    products,
-    currency,
-    cartItems,
-    setCartItems,
-    removeFromCart,
-    getCartCount,
-    updateCartItem,
-    navigate,
-    getCartAmount,
-    axios,
-    user,
-  } = useAppContext();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const currency = CURRENCY;
+
+  const products = useSelector((state) => state.products.products);
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const user = useSelector((state) => state.auth.user);
+  const cartCount = useSelector(selectCartCount);
+  const cartAmount = useSelector(selectCartAmount);
+
+  const getCartCount = () => cartCount;
+  const getCartAmount = () => cartAmount;
+
+  const removeFromCart = (itemId) => dispatch(removeFromCartAction(itemId));
+  const updateCartItem = (itemId, quantity) =>
+    dispatch(updateCartItemAction({ itemId, quantity }));
+  const setCartItems = (items) => dispatch(setCartItemsAction(items));
   const [showAddress, setShowAddress] = useState(false);
   const [cartArray, setCartArray] = useState([]);
   const [addresses, setAdresses] = useState([]);
@@ -99,9 +114,9 @@ const Cart = () => {
   };
 
   // Apply Coupon
-  const applyCoupon = () => {
-    if (!couponCode) return;
-    const code = couponCode.trim().toUpperCase();
+  const applyCoupon = (codeToApply) => {
+    const code = (typeof codeToApply === "string" ? codeToApply : couponCode).trim().toUpperCase();
+    if (!code) return;
     const cartAmount = getCartAmount();
 
     if (cartAmount === 0) {
@@ -128,6 +143,23 @@ const Cart = () => {
       setDiscountAmount(5);
       setAppliedCoupon("FREESHIP");
       toast.success("Coupon FREESHIP applied! Flat $5 off & Free Express Delivery!");
+      triggerConfetti();
+    } else if (code === "SPIN10") {
+      const discount = Math.round(cartAmount * 0.10 * 100) / 100;
+      setDiscountAmount(discount);
+      setAppliedCoupon("SPIN10");
+      toast.success("Coupon SPIN10 applied! 10% off");
+      triggerConfetti();
+    } else if (code === "SPIN15") {
+      const discount = Math.round(cartAmount * 0.15 * 100) / 100;
+      setDiscountAmount(discount);
+      setAppliedCoupon("SPIN15");
+      toast.success("Coupon SPIN15 applied! 15% off");
+      triggerConfetti();
+    } else if (code === "SPIN5") {
+      setDiscountAmount(5);
+      setAppliedCoupon("SPIN5");
+      toast.success("Coupon SPIN5 applied! Flat $5 off");
       triggerConfetti();
     } else {
       toast.error("Invalid Coupon Code!");
@@ -161,8 +193,10 @@ const Cart = () => {
     for (const key in cartItems) {
       const product = products.find((item) => item._id === key);
       if (product) {
-        product.quantity = cartItems[key];
-        tempArray.push(product);
+        tempArray.push({
+          ...product,
+          quantity: cartItems[key],
+        });
       }
     }
     setCartArray(tempArray);
@@ -170,7 +204,7 @@ const Cart = () => {
 
   const getUserAddress = async () => {
     try {
-      const { data } = await axios.get("/api/address/get");
+      const data = await getAddresses();
       if (data?.address?.length > 0) {
         setAdresses(data.address);
         setSelectedAddress(data.address[0]);
@@ -189,7 +223,7 @@ const Cart = () => {
       }
       setLoading(true);
       if (paymentOption === "COD") {
-        const { data } = await axios.post("api/order/cod", {
+        const data = await placeCODOrder({
           userId: user._id,
           items: cartArray.map((item) => ({
             product: item._id,
@@ -206,7 +240,7 @@ const Cart = () => {
           toast.error(data.message);
         }
       } else {
-        const { data } = await axios.post("api/order/stripe", {
+        const data = await placeStripeOrder({
           userId: user._id,
           items: cartArray.map((item) => ({
             product: item._id,
@@ -239,6 +273,18 @@ const Cart = () => {
       getUserAddress();
     }
   }, [user]);
+
+  useEffect(() => {
+    const pending = sessionStorage.getItem("srisCart_pendingCoupon");
+    if (pending && getCartAmount() > 0) {
+      setCouponCode(pending);
+      const t = setTimeout(() => {
+        applyCoupon(pending);
+        sessionStorage.removeItem("srisCart_pendingCoupon");
+      }, 300);
+      return () => clearTimeout(t);
+    }
+  }, [products, cartItems]);
 
   // Order summary calculations
   const basePrice = getCartAmount();

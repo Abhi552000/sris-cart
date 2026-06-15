@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { useAppContext } from "../../context/AppContext";
 import { User, Mail, Lock, Store, Phone, MapPin, Save } from "lucide-react";
 import toast from "react-hot-toast";
+import { getSellerProfile, updateSellerProfile } from "../../services/authService";
 
 const SellerProfile = () => {
-  const { axios } = useAppContext();
   const [name, setName] = useState("");
   const [storeName, setStoreName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,7 +17,7 @@ const SellerProfile = () => {
   const fetchProfile = async () => {
     try {
       setFetching(true);
-      const { data } = await axios.get("/api/seller/profile");
+      const data = await getSellerProfile();
       if (data.success) {
         setName(data.seller.name || "");
         setStoreName(data.seller.storeName || "");
@@ -59,7 +58,7 @@ const SellerProfile = () => {
         payload.password = password;
       }
 
-      const { data } = await axios.post("/api/seller/profile/update", payload);
+      const data = await updateSellerProfile(payload);
       if (data.success) {
         toast.success(data.message || "Profile updated successfully!");
         setPassword("");
