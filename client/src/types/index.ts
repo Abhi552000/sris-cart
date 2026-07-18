@@ -25,6 +25,8 @@ export interface Seller {
   email: string;
   phone?: string;
   address?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface Address {
@@ -41,6 +43,8 @@ export interface Address {
   zipcode?: string;
   country?: string;
   phone: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface Order {

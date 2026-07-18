@@ -6,6 +6,7 @@ export const ROUTES = {
   CART: "/cart",
   ADD_ADDRESS: "/add-address",
   MY_ORDERS: "/my-orders",
+  TRACK_ORDER: "/track-order/:orderId",
   PROFILE: "/profile",
   CONTACT: "/contact",
   FAQ: "/faq",
@@ -13,10 +14,21 @@ export const ROUTES = {
   DELIVERY_INFO: "/delivery-info",
   RETURN_REFUND: "/return-refund",
   LOADER: "/loader",
+  RIDER: {
+    ROOT: "/rider",
+    EARNINGS: "earnings",
+    PROFILE: "profile",
+  },
   SELLER: {
     ROOT: "/seller",
     PRODUCT_LIST: "product-list",
     ORDERS: "orders",
     PROFILE: "profile",
+  },
+  ADMIN: {
+    ROOT: "/admin",
+    USERS: "users",
+    SELLERS: "sellers",
+    RIDERS: "riders",
   }
 };
