@@ -20,3 +20,8 @@ export const getSellerOrders = async () => {
   const { data } = await apiClient.get(API_ROUTES.ORDER.SELLER_ORDERS);
   return data;
 };
+
+export const updateOrderStatus = async (orderId: string, status: string) => {
+  const { data } = await apiClient.post(API_ROUTES.ORDER.UPDATE_STATUS, { orderId, status });
+  return data;
+};

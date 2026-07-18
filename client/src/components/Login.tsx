@@ -63,8 +63,15 @@ const Login = () => {
         className="flex flex-col gap-4 m-auto items-start p-8 py-12 w-80 sm:w-[352px] rounded-lg shadow-xl border border-gray-200 bg-white"
       >
         <p className="text-2xl font-medium m-auto">
-          <span className="text-primary">User</span>{" "}
-          {state === "login" ? "Login" : "Sign Up"}
+          {state === "login" ? (
+            <>
+              <span className="text-primary">Welcome Back,</span> User
+            </>
+          ) : (
+            <>
+              <span className="text-primary">Create</span> User Account
+            </>
+          )}
         </p>
 
         {state === "register" && (

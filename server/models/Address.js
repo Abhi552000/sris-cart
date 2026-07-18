@@ -11,6 +11,8 @@ const addressSchema = new mongoose.Schema({
   zipcode: { type: Number, required: true },
   country: { type: String, required: true },
   phone: { type: String, required: true },
+  latitude: { type: Number },
+  longitude: { type: Number },
 });
 
 const Address =

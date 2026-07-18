@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import toast from "react-hot-toast";
-import { ArrowLeftIcon, Wallet, CreditCard, Ticket } from "lucide-react";
+import { ArrowLeftIcon, Wallet, CreditCard, Ticket, MapPin, AlertTriangle } from "lucide-react";
 import { getAddresses } from "../services/addressService";
 import { placeCODOrder, placeStripeOrder } from "../services/orderService";
 import { CURRENCY } from "../constants";
@@ -15,6 +15,22 @@ import {
   selectCartAmount,
 } from "../store/cartSlice";
 import { RootState, AppDispatch } from "../store";
+
+const SELLER_COORDS = { lat: 22.6030, lng: 88.3660 };
+
+const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+  const R = 6371; // km
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+};
 
 const Cart = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -38,6 +54,7 @@ const Cart = () => {
   const [cartArray, setCartArray] = useState([]);
   const [addresses, setAdresses] = useState([]);
   const [selectedAdress, setSelectedAddress] = useState(null);
+  console.log("Cart component - selectedAdress:", selectedAdress);
   const [paymentOption, setPaymentOption] = useState("COD");
   const [loading, setLoading] = useState(false);
 
@@ -45,6 +62,24 @@ const Cart = () => {
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [discountAmount, setDiscountAmount] = useState(0);
+
+  // Address distance range calculations
+  const getAddressRangeStatus = () => {
+    if (!selectedAdress) return { distance: null, isWithinRange: false, hasCoords: false };
+    if (selectedAdress.latitude === undefined || selectedAdress.longitude === undefined) {
+      return { distance: null, isWithinRange: false, hasCoords: false };
+    }
+    const dist = getDistance(
+      SELLER_COORDS.lat,
+      SELLER_COORDS.lng,
+      selectedAdress.latitude,
+      selectedAdress.longitude
+    );
+    return { distance: dist, isWithinRange: dist <= 4.0, hasCoords: true };
+  };
+
+  const { distance: addressDistance, isWithinRange: isAddressWithinRange, hasCoords } = getAddressRangeStatus();
+  const isCheckoutDisabled = loading || !selectedAdress || !isAddressWithinRange || !hasCoords;
 
   // Confetti effect trigger
   const triggerConfetti = () => {
@@ -394,11 +429,33 @@ const Cart = () => {
           <div>
             <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Delivery Address</p>
             <div className="relative flex justify-between items-start mt-2 bg-gray-50 p-3 rounded-xl border border-gray-100 text-xs sm:text-sm">
-              <p className="text-gray-600 leading-relaxed max-w-[200px]">
-                {selectedAdress
-                  ? `${selectedAdress.street}, ${selectedAdress.city}, ${selectedAdress.state}, ${selectedAdress.country}`
-                  : "No address found"}
-              </p>
+              <div className="space-y-1.5">
+                <p className="text-gray-600 leading-relaxed max-w-[200px]">
+                  {selectedAdress
+                    ? `${selectedAdress.street}, ${selectedAdress.city}, ${selectedAdress.state}, ${selectedAdress.country}`
+                    : "No address found"}
+                </p>
+                {selectedAdress && (
+                  <div className="pt-1 border-t border-gray-200/50">
+                    {!hasCoords ? (
+                      <p className="text-amber-600 font-semibold flex items-center gap-1 text-[11px]">
+                        <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                        No coordinates pinned. Please add a new address.
+                      </p>
+                    ) : isAddressWithinRange ? (
+                      <p className="text-emerald-600 font-semibold flex items-center gap-1 text-[11px]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0" />
+                        Within zone ({addressDistance.toFixed(2)} km)
+                      </p>
+                    ) : (
+                      <p className="text-red-500 font-bold flex items-center gap-1 text-[11px]">
+                        <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                        Out of range ({addressDistance.toFixed(2)} km)
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
               <button
                 onClick={() => setShowAddress(!showAddress)}
                 className="text-primary hover:text-amber-500 font-bold shrink-0 cursor-pointer"
@@ -546,9 +603,9 @@ const Cart = () => {
         </div>
 
         <button
-          disabled={loading}
+          disabled={isCheckoutDisabled}
           onClick={placeOrder}
-          className={`w-full py-3.5 mt-6 cursor-pointer bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-white font-bold rounded-xl shadow-lg shadow-yellow-500/10 hover:shadow-xl hover:shadow-yellow-500/20 transition-all duration-200 flex items-center justify-center gap-2 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+          className={`w-full py-3.5 mt-6 cursor-pointer bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-white font-bold rounded-xl shadow-lg shadow-yellow-500/10 hover:shadow-xl hover:shadow-yellow-500/20 transition-all duration-200 flex items-center justify-center gap-2 ${isCheckoutDisabled ? 'opacity-50 cursor-not-allowed grayscale pointer-events-none' : ''}`}
         >
           {loading ? (
             <>
