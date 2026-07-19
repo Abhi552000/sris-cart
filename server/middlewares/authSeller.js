@@ -15,7 +15,10 @@ const authSeller = async (req, res, next) => {
 
     if (seller) {
       if (seller.status === "Inactive" && req.path !== "/logout") {
-        return res.status(403).json({ success: false, message: "Your seller account is deactivated. Contact admin." });
+        const msg = seller.statusRemarks 
+          ? `Your seller account is deactivated. Reason: ${seller.statusRemarks}. Contact admin.`
+          : "Your seller account is deactivated. Contact admin.";
+        return res.status(403).json({ success: false, message: msg });
       }
       req.seller = seller;
       return next();

@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema(
     status: { type: String, enum: ["Active", "Inactive"], default: "Active" },
     cartItems: { type: Object, default: {} },
     refreshToken: { type: String, default: "" },
+    statusRemarks: { type: String, default: "" },
   },
   { minimize: false }
 );

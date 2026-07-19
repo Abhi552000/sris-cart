@@ -8,7 +8,10 @@ import asyncHandler from "../utils/asyncHandler.js";
 // Admin Login
 export const adminLogin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  if (email === "admin@sriscart.com" && password === "admin123") {
+  const adminEmail = process.env.ADMIN_EMAIL || "admin@sriscart.com";
+  const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
+
+  if (email === adminEmail && password === adminPassword) {
     const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "7d" });
     res.cookie("adminToken", token, {
       httpOnly: true,
@@ -45,11 +48,12 @@ export const getUsers = asyncHandler(async (req, res) => {
 
 // Toggle User Status
 export const toggleUserStatus = asyncHandler(async (req, res) => {
-  const { userId } = req.body;
+  const { userId, remarks } = req.body;
   const user = await User.findById(userId);
   if (!user) return res.status(404).json({ success: false, message: "User not found" });
 
   user.status = user.status === "Active" ? "Inactive" : "Active";
+  user.statusRemarks = user.status === "Inactive" ? (remarks || "No reason specified") : "";
   await user.save();
   return res.json({ success: true, message: `User status changed to ${user.status}`, status: user.status });
 });
@@ -62,11 +66,12 @@ export const getSellers = asyncHandler(async (req, res) => {
 
 // Toggle Seller Status
 export const toggleSellerStatus = asyncHandler(async (req, res) => {
-  const { sellerId } = req.body;
+  const { sellerId, remarks } = req.body;
   const seller = await Seller.findById(sellerId);
   if (!seller) return res.status(404).json({ success: false, message: "Seller not found" });
 
   seller.status = seller.status === "Active" ? "Inactive" : "Active";
+  seller.statusRemarks = seller.status === "Inactive" ? (remarks || "No reason specified") : "";
   await seller.save();
   return res.json({ success: true, message: `Seller status changed to ${seller.status}`, status: seller.status });
 });
@@ -79,11 +84,12 @@ export const getRiders = asyncHandler(async (req, res) => {
 
 // Toggle Rider Status
 export const toggleRiderStatus = asyncHandler(async (req, res) => {
-  const { riderId } = req.body;
+  const { riderId, remarks } = req.body;
   const rider = await Rider.findById(riderId);
   if (!rider) return res.status(404).json({ success: false, message: "Rider not found" });
 
   rider.status = rider.status === "Active" ? "Inactive" : "Active";
+  rider.statusRemarks = rider.status === "Inactive" ? (remarks || "No reason specified") : "";
   await rider.save();
   return res.json({ success: true, message: `Rider status changed to ${rider.status}`, status: rider.status });
 });
@@ -94,7 +100,12 @@ export const getAdminStats = asyncHandler(async (req, res) => {
   const totalSellers = await Seller.countDocuments();
   const totalRiders = await Rider.countDocuments();
 
-  const orders = await Order.find({}).populate("address");
+  const orders = await Order.find({})
+    .populate("address")
+    .populate({
+      path: "items.product",
+      model: "product",
+    });
   const totalOrders = orders.length;
 
   const totalSales = orders

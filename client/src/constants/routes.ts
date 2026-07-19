@@ -18,12 +18,14 @@ export const ROUTES = {
     ROOT: "/rider",
     EARNINGS: "earnings",
     PROFILE: "profile",
+    CHANGE_PASSWORD: "change-password",
   },
   SELLER: {
     ROOT: "/seller",
     PRODUCT_LIST: "product-list",
     ORDERS: "orders",
     PROFILE: "profile",
+    CHANGE_PASSWORD: "change-password",
   },
   ADMIN: {
     ROOT: "/admin",

@@ -17,7 +17,10 @@ const authUser = async (req, res, next) => {
         return res.status(401).json({ success: false, message: "Not Authorized" });
       }
       if (user.status === "Inactive" && req.path !== "/logout") {
-        return res.status(403).json({ success: false, message: "Your user account is deactivated. Contact support." });
+        const msg = user.statusRemarks 
+          ? `Your user account is deactivated. Reason: ${user.statusRemarks}. Contact support.`
+          : "Your user account is deactivated. Contact support.";
+        return res.status(403).json({ success: false, message: msg });
       }
       req.user = { id: decoded.id };
       return next();

@@ -11,7 +11,10 @@ const sellerSchema = new mongoose.Schema(
     status: { type: String, enum: ["Active", "Inactive"], default: "Active" },
     latitude: { type: Number, default: 22.6030 },
     longitude: { type: Number, default: 88.3660 },
+    gstNumber: { type: String, default: "" },
+    branch: { type: String, default: "" },
     refreshToken: { type: String, default: "" },
+    statusRemarks: { type: String, default: "" },
   },
   { minimize: false }
 );

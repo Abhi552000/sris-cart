@@ -31,6 +31,11 @@ export const loginSeller = async (email: string, password: string) => {
   return data;
 };
 
+export const registerSeller = async (payload: any) => {
+  const { data } = await apiClient.post(API_ROUTES.SELLER.REGISTER, payload);
+  return data;
+};
+
 export const logoutSeller = async () => {
   const { data } = await apiClient.post(API_ROUTES.SELLER.LOGOUT);
   return data;

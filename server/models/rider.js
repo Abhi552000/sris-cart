@@ -11,6 +11,7 @@ const riderSchema = new mongoose.Schema(
     latitude: { type: Number, default: 22.6030 },
     longitude: { type: Number, default: 88.3660 },
     refreshToken: { type: String, default: "" },
+    statusRemarks: { type: String, default: "" },
   },
   { minimize: false, timestamps: true }
 );

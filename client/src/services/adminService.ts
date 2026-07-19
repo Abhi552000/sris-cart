@@ -21,8 +21,8 @@ export const getAdminUsers = async () => {
   return data;
 };
 
-export const toggleUserStatus = async (userId: string) => {
-  const { data } = await apiClient.post(API_ROUTES.ADMIN.USER_TOGGLE, { userId });
+export const toggleUserStatus = async (userId: string, remarks?: string) => {
+  const { data } = await apiClient.post(API_ROUTES.ADMIN.USER_TOGGLE, { userId, remarks });
   return data;
 };
 
@@ -31,8 +31,8 @@ export const getAdminSellers = async () => {
   return data;
 };
 
-export const toggleSellerStatus = async (sellerId: string) => {
-  const { data } = await apiClient.post(API_ROUTES.ADMIN.SELLER_TOGGLE, { sellerId });
+export const toggleSellerStatus = async (sellerId: string, remarks?: string) => {
+  const { data } = await apiClient.post(API_ROUTES.ADMIN.SELLER_TOGGLE, { sellerId, remarks });
   return data;
 };
 
@@ -41,8 +41,8 @@ export const getAdminRiders = async () => {
   return data;
 };
 
-export const toggleRiderStatus = async (riderId: string) => {
-  const { data } = await apiClient.post(API_ROUTES.ADMIN.RIDER_TOGGLE, { riderId });
+export const toggleRiderStatus = async (riderId: string, remarks?: string) => {
+  const { data } = await apiClient.post(API_ROUTES.ADMIN.RIDER_TOGGLE, { riderId, remarks });
   return data;
 };
 

@@ -29,10 +29,10 @@ const RiderProfile: React.FC<RiderProfileProps> = ({
   todayDeliveriesCount,
 }) => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full items-start">
       {/* Left Column: Interactive Avatar & Edit Profile Form */}
       <div className="lg:col-span-2 bg-white rounded-3xl border border-gray-200 shadow-xl p-6 sm:p-8 space-y-6">
-        <h3 className="text-lg font-bold text-gray-800 border-b border-gray-100 pb-4">Update Profile Details</h3>
+        <h3 className="text-lg font-bold text-gray-800 border-b border-gray-100 pb-3">Update Profile Details</h3>
         
         <form onSubmit={handleUpdateProfile} className="space-y-6">
           {/* Select Avatar Image */}
@@ -76,7 +76,7 @@ const RiderProfile: React.FC<RiderProfileProps> = ({
                 value={editImage}
                 onChange={(e) => setEditImage(e.target.value)}
                 placeholder="https://example.com/avatar.jpg"
-                className="w-full px-4 py-2 text-xs border border-gray-200 rounded-xl outline-none focus:border-primary focus:ring-1 focus:ring-primary/10 transition text-gray-600"
+                className="w-full px-4 py-2 text-xs border border-gray-200 rounded-xl outline-none focus:border-primary focus:ring-1 focus:ring-primary/10 transition text-gray-650"
               />
             </div>
           </div>
@@ -114,7 +114,7 @@ const RiderProfile: React.FC<RiderProfileProps> = ({
             <input
               type="email"
               value={rider?.email || ""}
-              className="w-full px-4 py-3 bg-slate-50 border border-gray-200 rounded-xl outline-none text-sm text-gray-405 font-medium cursor-not-allowed"
+              className="w-full px-4 py-3 bg-slate-50 border border-gray-200 rounded-xl outline-none text-sm text-gray-400 font-medium cursor-not-allowed"
               disabled
             />
           </div>
@@ -133,7 +133,7 @@ const RiderProfile: React.FC<RiderProfileProps> = ({
       </div>
 
       {/* Right Column: Stats & Target Card */}
-      <div className="bg-gradient-to-br from-amber-500 to-amber-600 text-white rounded-3xl shadow-xl shadow-amber-500/20 p-8 space-y-6 flex flex-col justify-between h-fit">
+      <div className="lg:col-span-1 bg-gradient-to-br from-amber-500 to-amber-600 text-white rounded-3xl shadow-xl shadow-amber-500/20 p-8 space-y-6 flex flex-col justify-between h-fit">
         <div className="space-y-4">
           <div className="inline-flex w-12 h-12 bg-white/20 rounded-2xl items-center justify-center">
             <Award className="w-6 h-6" />

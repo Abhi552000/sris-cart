@@ -41,7 +41,7 @@ export const riderLogout = async () => {
   return data;
 };
 
-export const updateRiderProfile = async (payload: { status?: string; name?: string; phone?: string; image?: string }) => {
+export const updateRiderProfile = async (payload: { status?: string; name?: string; phone?: string; image?: string; password?: string }) => {
   const { data } = await apiClient.post(API_ROUTES.RIDER.PROFILE_UPDATE, payload);
   return data;
 };
