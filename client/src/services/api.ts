@@ -1,5 +1,4 @@
 import axiosInstance from "axios";
-import { store } from "../store";
 import { setUser, setIsSeller } from "../store/authSlice";
 import { setCartItems } from "../store/cartSlice";
 import toast from "react-hot-toast";
@@ -78,6 +77,7 @@ apiClient.interceptors.response.use(
         processQueue(refreshError);
 
         // Silent Refresh failed: session revoked/expired. Force log out client states.
+        const { store } = await import("../store");
         store.dispatch(setUser(null));
         store.dispatch(setIsSeller(false));
         store.dispatch(setCartItems({}));
@@ -104,6 +104,7 @@ apiClient.interceptors.response.use(
       const message = error.response.data?.message || "";
       if (message.toLowerCase().includes("deactivated")) {
         // Clear redux states
+        const { store } = await import("../store");
         store.dispatch(setUser(null));
         store.dispatch(setIsSeller(false));
         store.dispatch(setCartItems({}));
