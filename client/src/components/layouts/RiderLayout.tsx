@@ -59,7 +59,6 @@ const RiderLayout: React.FC<RiderLayoutProps> = ({
   const sidebarLinks = [
     { name: "Active Deliveries", path: "/rider", icon: <ListTodo className="w-6 h-6 shrink-0" />, end: true },
     { name: "Earnings & History", path: "/rider/earnings", icon: <TrendingUp className="w-6 h-6 shrink-0" />, end: false },
-    { name: "My Profile", path: "/rider/profile", icon: <User className="w-6 h-6 shrink-0" />, end: false },
   ];
 
   return (
@@ -79,17 +78,7 @@ const RiderLayout: React.FC<RiderLayoutProps> = ({
         </div>
 
         <div className="flex items-center gap-3 sm:gap-5 text-sm text-gray-500">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-200 bg-slate-100 flex items-center justify-center shrink-0">
-              {rider?.image ? (
-                <img src={rider.image} alt="Avatar" className="w-full h-full object-cover" />
-              ) : (
-                <User className="w-4.5 h-4.5 text-gray-400" />
-              )}
-            </div>
-            <p className="hidden md:block font-semibold">Hi! <span className="font-bold text-gray-700">{rider?.name}</span></p>
-          </div>
-          
+          {/* Duty Status */}
           <button
             onClick={toggleDutyStatus}
             className={`px-3 py-1.5 rounded-full text-[10px] font-extrabold flex items-center gap-1 border transition cursor-pointer ${
@@ -111,12 +100,40 @@ const RiderLayout: React.FC<RiderLayoutProps> = ({
             )}
           </button>
 
-          <button
-            onClick={handleLogout}
-            className="border border-gray-200 rounded-full text-xs px-3.5 py-1.5 text-gray-600 hover:bg-gray-50 transition cursor-pointer font-bold flex items-center gap-1 shrink-0"
-          >
-            <LogOut className="w-3.5 h-3.5" /> Logout
-          </button>
+          {/* User Profile Avatar Dropdown */}
+          <div className="flex items-center gap-2 relative group py-2">
+            <p className="hidden md:block font-semibold text-gray-600">Hi! <span className="font-bold text-gray-800">{rider?.name}</span></p>
+            <div className="w-9 h-9 rounded-full overflow-hidden border border-gray-200 bg-slate-100 flex items-center justify-center shrink-0 cursor-pointer hover:opacity-80 transition shadow-sm">
+              {rider?.image ? (
+                <img src={rider.image} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <User className="w-4.5 h-4.5 text-gray-400" />
+              )}
+            </div>
+
+            <ul className="hidden group-hover:block absolute top-11 right-0 bg-white shadow-lg border border-gray-200 py-2 w-44 rounded-xl text-sm z-40">
+              <li
+                onClick={() => navigate("/rider/profile")}
+                className="p-2.5 pl-4 hover:bg-primary/10 cursor-pointer text-gray-700 font-medium flex items-center gap-2"
+              >
+                <span>My Profile</span>
+              </li>
+              <li
+                onClick={() => {
+                  navigate("/rider/change-password");
+                }}
+                className="p-2.5 pl-4 hover:bg-primary/10 cursor-pointer text-gray-700 font-medium flex items-center gap-2"
+              >
+                <span>Change Password</span>
+              </li>
+              <li
+                onClick={handleLogout}
+                className="p-2.5 pl-4 hover:bg-red-50 cursor-pointer text-red-600 font-bold border-t border-gray-100 flex items-center gap-2"
+              >
+                <span>Logout</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 

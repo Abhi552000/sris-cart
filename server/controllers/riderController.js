@@ -278,13 +278,17 @@ export const riderLogout = asyncHandler(async (req, res) => {
   return res.json({ success: true, message: "Logged Out" });
 });
 
-// Update Rider Profile/Duty Status : /api/rider/profile/update
 export const updateRiderProfile = asyncHandler(async (req, res) => {
-  const { status, name, phone, image } = req.body;
+  const { status, name, phone, image, password } = req.body;
   if (status !== undefined) req.rider.status = status;
   if (name !== undefined) req.rider.name = name;
   if (phone !== undefined) req.rider.phone = phone;
   if (image !== undefined) req.rider.image = image;
+
+  if (password) {
+    const salt = await bcrypt.genSalt(10);
+    req.rider.password = await bcrypt.hash(password, salt);
+  }
 
   await req.rider.save();
 

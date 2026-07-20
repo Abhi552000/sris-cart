@@ -26,28 +26,58 @@ const setSellerCookies = (res, accessToken, refreshToken) => {
   });
 };
 
+// Seller Self-Onboarding Registration : /api/seller/register
+export const sellerRegister = asyncHandler(async (req, res) => {
+  const { name, storeName, email, password, gstNumber, branch, phone, address, latitude, longitude } = req.body;
+
+  if (!name || !storeName || !email || !password) {
+    return res.status(400).json({ success: false, message: "Missing required onboarding details" });
+  }
+
+  const existingSeller = await Seller.findOne({ email });
+  if (existingSeller) {
+    return res.status(400).json({ success: false, message: "Seller already exists with this email" });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const newSeller = await Seller.create({
+    name,
+    storeName,
+    email,
+    password: hashedPassword,
+    gstNumber: gstNumber || "",
+    branch: branch || "",
+    phone: phone || "",
+    address: address || "",
+    latitude: latitude || 22.6030,
+    longitude: longitude || 88.3660,
+    status: "Active",
+  });
+
+  const { accessToken, refreshToken } = generateSellerTokens(newSeller.email);
+
+  // Save refresh token in DB
+  newSeller.refreshToken = refreshToken;
+  await newSeller.save();
+
+  setSellerCookies(res, accessToken, refreshToken);
+
+  const sellerData = newSeller.toObject();
+  delete sellerData.password;
+
+  return res.json({
+    success: true,
+    message: "Seller account created successfully",
+    seller: sellerData,
+  });
+});
+
 // Seller Login : /api/seller/login
 export const sellerLogin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  let seller = await Seller.findOne({ email });
-
-  // Seed default seller if DB is empty and email matches process.env
-  if (!seller && email === process.env.SELLER_EMAIL) {
-    if (password === process.env.SELLER_PASSWORD) {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      seller = await Seller.create({
-        name: "Admin",
-        storeName: "SrisCart Store",
-        email,
-        password: hashedPassword,
-        phone: "+91 98765 43210",
-        address: "12 Baghbazar Street, Near Baghbazar Ghat, Kolkata, West Bengal 700003",
-        latitude: 22.6030,
-        longitude: 88.3660,
-      });
-    }
-  }
+  const seller = await Seller.findOne({ email });
 
   if (!seller) {
     return res.status(401).json({ success: false, message: "Invalid credentials" });
@@ -111,51 +141,38 @@ export const isSellerAuth = asyncHandler(async (req, res) => {
 // Get Seller Profile : /api/seller/profile
 export const getSellerProfile = asyncHandler(async (req, res) => {
   if (req.seller) {
-    return res.json({ success: true, seller: req.seller });
+    const sellerData = req.seller.toObject();
+    delete sellerData.password;
+    return res.json({ success: true, seller: sellerData });
   }
-  // Fallback if database record doesn't exist yet but user is validated via ENV
-  return res.json({
-    success: true,
-    seller: {
-      name: "Admin",
-      storeName: "SrisCart Store",
-      email: process.env.SELLER_EMAIL,
-      phone: "+91 98765 43210",
-      address: "12 Baghbazar Street, Near Baghbazar Ghat, Kolkata, West Bengal 700003",
-      latitude: 22.6030,
-      longitude: 88.3660,
-    },
-  });
+  return res.status(404).json({ success: false, message: "Seller not found" });
 });
 
 // Update Seller Profile : /api/seller/profile/update
 export const updateSellerProfile = asyncHandler(async (req, res) => {
-  const { name, storeName, email, phone, address, password } = req.body;
-  const currentEmail = req.seller ? req.seller.email : process.env.SELLER_EMAIL;
+  const { name, storeName, phone, address, latitude, longitude, gstNumber, branch, password } = req.body;
+  const currentEmail = req.seller.email;
 
-  let seller = await Seller.findOne({ email: currentEmail });
+  const seller = await Seller.findOne({ email: currentEmail });
 
   if (!seller) {
-    const defaultPassword = await bcrypt.hash(process.env.SELLER_PASSWORD, 10);
-    seller = await Seller.create({
-      name: name || "Admin",
-      storeName: storeName || "SrisCart Store",
-      email: email || currentEmail,
-      password: defaultPassword,
-      phone: phone || "",
-      address: address || "",
-    });
-  } else {
-    if (name) seller.name = name;
-    if (storeName) seller.storeName = storeName;
-    if (email) seller.email = email;
-    if (phone) seller.phone = phone;
-    if (address) seller.address = address;
-    if (password) {
-      seller.password = await bcrypt.hash(password, 10);
-    }
-    await seller.save();
+    return res.status(404).json({ success: false, message: "Seller not found" });
   }
+
+  if (name !== undefined) seller.name = name;
+  if (storeName !== undefined) seller.storeName = storeName;
+  if (phone !== undefined) seller.phone = phone;
+  if (address !== undefined) seller.address = address;
+  if (latitude !== undefined) seller.latitude = Number(latitude);
+  if (longitude !== undefined) seller.longitude = Number(longitude);
+  if (gstNumber !== undefined) seller.gstNumber = gstNumber;
+  if (branch !== undefined) seller.branch = branch;
+  
+  if (password) {
+    seller.password = await bcrypt.hash(password, 10);
+  }
+  
+  await seller.save();
 
   const { accessToken, refreshToken } = generateSellerTokens(seller.email);
 
@@ -165,7 +182,10 @@ export const updateSellerProfile = asyncHandler(async (req, res) => {
 
   setSellerCookies(res, accessToken, refreshToken);
 
-  return res.json({ success: true, message: "Profile Updated Successfully", seller });
+  const sellerData = seller.toObject();
+  delete sellerData.password;
+
+  return res.json({ success: true, message: "Profile Updated Successfully", seller: sellerData });
 });
 
 // Logout Seller : /api/seller/logout

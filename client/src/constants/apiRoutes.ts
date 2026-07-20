@@ -9,6 +9,7 @@ export const API_ROUTES = {
   SELLER: {
     IS_AUTH: "/api/seller/is-auth",
     LOGIN: "/api/seller/login",
+    REGISTER: "/api/seller/register",
     LOGOUT: "/api/seller/logout",
     PROFILE: "/api/seller/profile",
     PROFILE_UPDATE: "/api/seller/profile/update",

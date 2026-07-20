@@ -17,7 +17,6 @@ const SellerLayout = () => {
       icon: assets.product_list_icon,
     },
     { name: "Order", path: "/seller/orders", icon: assets.order_icon },
-    { name: "Profile", path: "/seller/profile", icon: assets.profile_icon },
   ];
 
   const fetchSellerDetails = async () => {
@@ -74,13 +73,32 @@ const SellerLayout = () => {
           </span>
         </div>
         <div className="flex items-center gap-5 text-gray-500">
-          <p>Hi! {sellerName}</p>
-          <button
-            onClick={logout}
-            className="border rounded-full text-sm px-4 py-1"
-          >
-            Logout
-          </button>
+          <p className="hidden sm:block text-sm font-medium text-gray-600">Hi! {sellerName}</p>
+          <div className="relative group py-2">
+            <img src={assets.profile_icon} className="w-9 h-9 rounded-full cursor-pointer hover:opacity-80 transition" alt="Profile" />
+            <ul className="hidden group-hover:block absolute top-11 right-0 bg-white shadow-lg border border-gray-200 py-2 w-40 rounded-xl text-sm z-40">
+              <li
+                onClick={() => navigate("/seller/profile")}
+                className="p-2.5 pl-4 hover:bg-primary/10 cursor-pointer text-gray-700 font-medium flex items-center gap-2"
+              >
+                <span>Store Profile</span>
+              </li>
+              <li
+                onClick={() => {
+                  navigate("/seller/change-password");
+                }}
+                className="p-2.5 pl-4 hover:bg-primary/10 cursor-pointer text-gray-700 font-medium flex items-center gap-2"
+              >
+                <span>Change Password</span>
+              </li>
+              <li
+                onClick={logout}
+                className="p-2.5 pl-4 hover:bg-red-50 cursor-pointer text-red-600 font-bold border-t border-gray-100 flex items-center gap-2"
+              >
+                <span>Logout</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
       <div className="flex">

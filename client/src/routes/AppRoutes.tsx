@@ -26,11 +26,13 @@ const AddProduct = lazy(() => import("../pages/seller/AddProduct"));
 const ProductList = lazy(() => import("../pages/seller/ProductList"));
 const Orders = lazy(() => import("../pages/seller/Orders"));
 const SellerProfile = lazy(() => import("../pages/seller/SellerProfile"));
+const SellerChangePassword = lazy(() => import("../pages/seller/SellerChangePassword"));
 
 const RiderGuard = lazy(() => import("../components/layouts/RiderGuard"));
 const ActiveDeliveries = lazy(() => import("../pages/rider/ActiveDeliveries"));
 const RiderEarnings = lazy(() => import("../pages/rider/RiderEarnings"));
 const RiderProfilePage = lazy(() => import("../pages/rider/RiderProfilePage"));
+const RiderChangePassword = lazy(() => import("../pages/rider/RiderChangePassword"));
 
 const AdminGuard = lazy(() => import("../components/layouts/AdminGuard"));
 const AdminAnalyticsPage = lazy(() => import("../pages/admin/AdminAnalyticsPage"));
@@ -75,6 +77,7 @@ const AppRoutes = () => {
             <Route index element={<ActiveDeliveries />} />
             <Route path={ROUTES.RIDER.EARNINGS} element={<RiderEarnings />} />
             <Route path={ROUTES.RIDER.PROFILE} element={<RiderProfilePage />} />
+            <Route path={ROUTES.RIDER.CHANGE_PASSWORD} element={<RiderChangePassword />} />
           </Route>
 
           {/* Admin Routes */}
@@ -91,6 +94,7 @@ const AppRoutes = () => {
             <Route path={ROUTES.SELLER.PRODUCT_LIST} element={<ProductList />} />
             <Route path={ROUTES.SELLER.ORDERS} element={<Orders />} />
             <Route path={ROUTES.SELLER.PROFILE} element={<SellerProfile />} />
+            <Route path={ROUTES.SELLER.CHANGE_PASSWORD} element={<SellerChangePassword />} />
           </Route>
         </Route>
       </Routes>

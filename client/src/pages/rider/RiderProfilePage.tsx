@@ -76,8 +76,12 @@ const RiderProfilePage = () => {
   ).length;
 
   return (
-    <div className="md:p-10 p-4 space-y-6">
-      <h2 className="text-xl font-bold text-gray-800">My Profile Settings</h2>
+    <div className="flex-1 w-full bg-slate-50/50 p-4 md:p-8 space-y-6">
+      <div className="flex flex-col items-start">
+        <h2 className="text-3xl font-extrabold text-gray-800">My Profile Settings</h2>
+        <div className="w-16 h-1 bg-primary rounded-full mt-2"></div>
+      </div>
+      
       <RiderProfile
         rider={rider}
         editName={editName}

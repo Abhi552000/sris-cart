@@ -14,7 +14,10 @@ const authRider = async (req, res, next) => {
 
     if (rider) {
       if (rider.status === "Inactive" && req.path !== "/logout") {
-        return res.status(403).json({ success: false, message: "Your rider account is deactivated. Contact admin." });
+        const msg = rider.statusRemarks 
+          ? `Your rider account is deactivated. Reason: ${rider.statusRemarks}. Contact admin.`
+          : "Your rider account is deactivated. Contact admin.";
+        return res.status(403).json({ success: false, message: msg });
       }
       req.rider = rider;
       return next();
