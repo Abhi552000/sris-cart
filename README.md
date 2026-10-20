@@ -101,29 +101,6 @@ SrisCart is a modern, high-performance web application designed for express groc
 - **Client**: React (TypeScript), Vite, Tailwind CSS, Leaflet.js, Redux Toolkit, Lucide React, React Hot Toast.
 - **Server**: Node.js, Express, Mongoose (MongoDB), Stripe, Cookie Parser, JWT Auth, Helmet, Compression.
 
----
-
-## 🔑 Tester Login Credentials
-
-Use the following pre-configured credentials to test all roles in the delivery ecosystem:
-
-### 1. Buyer Accounts (Standard Users)
-- **Email**: `abhisheksingh552000@gmail.com`
-- **Password**: `12345678` *(or register a new user in the app)*
-
-### 2. Seller Account (Store Manager)
-- **Path**: `/seller`
-- **Email**: `admin@sriscart.com`
-- **Password**: `admin123`
-
-### 3. Rider Accounts (Delivery Agents)
-- **Path**: `/rider`
-- **Email**: `rider1@sriscart.com` / `rider123` (Rahul) or `rider2@sriscart.com` / `rider123` (Amit)
-
-### 4. Admin Account (Platform Control Room)
-- **Path**: `/admin`
-- **Email**: `admin@sriscart.com`
-- **Password**: `admin123` *(Static credentials, no registration required)*
 
 ---
 
