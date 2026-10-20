@@ -75,8 +75,9 @@ Be brief, concise, and helpful. Keep responses under 4 sentences unless asked fo
       parts: [{ text: message }]
     });
 
-    const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent",
+    // Use gemini-3.5-flash-lite for fastest response and highest availability
+    let response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
       {
         method: "POST",
         headers: {
@@ -86,6 +87,22 @@ Be brief, concise, and helpful. Keep responses under 4 sentences unless asked fo
         body: JSON.stringify({ contents }),
       }
     );
+
+    // Fallback to gemini-3.5-flash if flash-lite is unavailable
+    if (!response.ok && response.status === 503) {
+      console.warn("gemini-3.5-flash-lite busy, falling back to gemini-3.5-flash");
+      response = await fetch(
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-goog-api-key": apiKey,
+          },
+          body: JSON.stringify({ contents }),
+        }
+      );
+    }
 
     const data = await response.json();
 
